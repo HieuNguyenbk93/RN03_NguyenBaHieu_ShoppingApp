@@ -1,17 +1,15 @@
+import { NavigationContainer } from '@react-navigation/native';
 import React, { Component } from 'react'
-import { SafeAreaView, Text, View, StyleSheet } from 'react-native'
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { Text, View, StyleSheet } from 'react-native'
+import RootNavigation from './src/navigation/RootNavigation';
+import TabNavigation from './src/navigation/TabNavigation';
 
 export default class App extends Component {
 	render() {
 		return (
-			<SafeAreaView>
-				<View>
-					<Text> textInComponent </Text>
-					<Icon name="facebook" backgroundColor="#3b5998"/>
-				</View>
-			</SafeAreaView>
-			
+			<NavigationContainer>
+				<RootNavigation />
+			</NavigationContainer>
 		)
 	}
 }
@@ -19,6 +17,8 @@ export default class App extends Component {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
 	}
 })
 
