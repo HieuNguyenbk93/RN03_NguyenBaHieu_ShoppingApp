@@ -8,20 +8,25 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import Feather from 'react-native-vector-icons/Feather';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import { useDispatch, useSelector } from 'react-redux';
+import { getRequestLoginSelector } from '../../redux/selectors/authenSelector';
+import { getRequestLogin } from '../../redux/thunk/authenThunkAction';
 
 const loginValidationSchema = yup.object().shape({
-    email: yup
+    Username: yup
       .string()
-      .email("Please enter valid email")
+      //.email("Please enter valid email")
       .required('Email Address is Required'),
-    password: yup
+    Password: yup
       .string()
       .required('Password is required'),
   })
 
-function SignInScreen({navigation}){
+const SignInScreen = ({navigation}) => {
 
     const [securePass, setsecurePass] = useState(true);
+    const dispatch = useDispatch();
+    const authen = useSelector(getRequestLoginSelector);
 
     const passShowButton = () => {
         if (securePass) {
@@ -42,8 +47,11 @@ function SignInScreen({navigation}){
                 <View style={styles.container}>
                     <Formik
                         validationSchema={loginValidationSchema}
-                        initialValues={{ email: '', password: '' }}
-                        onSubmit={values => console.log(values)}
+                        initialValues={{ Username: '', Password: '' }}
+                        onSubmit={values => {
+                            console.log(values);
+                            dispatch(getRequestLogin(values));
+                            }}
                     >
                     { ({ handleChange, handleBlur, handleSubmit, values, errors, touched, isValid }) => (
                         <View style={styles.containerForm}>
@@ -54,15 +62,15 @@ function SignInScreen({navigation}){
                                     placeholder="User name"
                                     autoCapitalize="none"
                                     keyboardAppearance={'light'}
-                                    name = 'email'
-                                    onChangeText={handleChange('email')}
-                                    onBlur={handleBlur('email')}
-                                    value={values.email}
+                                    name = 'Username'
+                                    onChangeText={handleChange('Username')}
+                                    onBlur={handleBlur('Username')}
+                                    value={values.Username}
                                     
                                 />
                             </View>
-                            {errors.email &&
-                                <Text style={{ fontSize: 12, color: 'red', marginHorizontal:30 }}>* {errors.email}</Text>
+                            {errors.Username &&
+                                <Text style={{ fontSize: 12, color: 'red', marginHorizontal:30 }}>* {errors.Username}</Text>
                             }
                             <View style={styles.user_input}>
                                 <Feather name="lock" size={30} color={COLORS.gray}/>
@@ -70,20 +78,20 @@ function SignInScreen({navigation}){
                                     style={styles.text_input}
                                     placeholder="Password"
                                     autoCapitalize="none"
-                                    name='password'
-                                    onChangeText={handleChange('password')}
-                                    onBlur={handleBlur('password')}
-                                    value={values.password}
+                                    name='Password'
+                                    onChangeText={handleChange('Password')}
+                                    onBlur={handleBlur('Password')}
+                                    value={values.Password}
                                     secureTextEntry={securePass}
                                 />
                                 <TouchableOpacity
                                     onPress={ () => setsecurePass(!securePass) }
                                 >
-                                    {!errors.password && passShowButton()}
+                                    {!errors.Password && passShowButton()}
                                 </TouchableOpacity>
                             </View>
-                            {(errors.password && touched.email) && 
-                                <Text style={{ fontSize: 12, color: 'red', marginHorizontal:30 }}>{errors.password}</Text>
+                            {(errors.Password && touched.email) && 
+                                <Text style={{ fontSize: 12, color: 'red', marginHorizontal:30 }}>{errors.Password}</Text>
                             }
                             <TouchableOpacity style={styles.button}
                                 onPress={handleSubmit} disabled={!isValid}
